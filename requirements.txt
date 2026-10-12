@@ -1,3 +1,4 @@
 aiogram>=3.13,<4
 qrcode[pil]>=7.4
 python-dotenv>=1.0
+tzdata>=2024.1

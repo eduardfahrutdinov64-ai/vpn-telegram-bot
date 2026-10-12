@@ -1,6 +1,7 @@
 """Настройки бота. Все значения берутся из файла .env (см. .env.example)."""
 import os
 from dataclasses import dataclass, field
+from datetime import timedelta, timezone, tzinfo
 from zoneinfo import ZoneInfo
 
 from dotenv import load_dotenv
@@ -18,6 +19,13 @@ def _bool(name: str, default: bool) -> bool:
 def _ids(name: str) -> set[int]:
     raw = os.getenv(name, "")
     return {int(x) for x in raw.replace(" ", "").split(",") if x}
+
+
+def _tz(name: str) -> tzinfo:
+    try:
+        return ZoneInfo(name)
+    except Exception:  # на Windows нет базы часовых поясов без пакета tzdata — берём МСК (UTC+3)
+        return timezone(timedelta(hours=3), "MSK")
 
 
 @dataclass(frozen=True)
@@ -38,7 +46,7 @@ class Config:
     support_username: str = field(default_factory=lambda: os.getenv("SUPPORT_USERNAME", "support").lstrip("@"))
     service_name: str = field(default_factory=lambda: os.getenv("SERVICE_NAME", "NovaVPN"))
     db_path: str = field(default_factory=lambda: os.getenv("DB_PATH", "vpn_bot.sqlite3"))
-    tz: ZoneInfo = field(default_factory=lambda: ZoneInfo(os.getenv("TZ_NAME", "Europe/Moscow")))
+    tz: tzinfo = field(default_factory=lambda: _tz(os.getenv("TZ_NAME", "Europe/Moscow")))
 
 
 # Локации серверов. Для реального сервиса замените host на адреса своих серверов.
