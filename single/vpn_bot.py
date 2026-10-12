@@ -46,8 +46,8 @@ except ImportError:  # python-dotenv не обязателен, если всё 
 # НАСТРОЙКИ
 # =====================================================================
 
-BOT_TOKEN = os.getenv("BOT_TOKEN", "")                     # токен от @BotFather
-ADMIN_IDS = {int(x) for x in os.getenv("ADMIN_IDS", "").replace(" ", "").split(",") if x}  # ваш ID: @userinfobot
+BOT_TOKEN = os.getenv("BOT_TOKEN") or os.getenv("TOKEN") or ""                     # токен от @BotFather
+ADMIN_IDS = {int(x) for x in (os.getenv("ADMIN_IDS") or os.getenv("ID") or "").replace(" ", "").split(",") if x}  # ваш ID: @userinfobot
 SERVICE_NAME = os.getenv("SERVICE_NAME", "NovaVPN")
 SUPPORT_USERNAME = os.getenv("SUPPORT_USERNAME", "novavpn_support").lstrip("@")
 DEMO_PAYMENTS = os.getenv("DEMO_PAYMENTS", "true").strip().lower() in ("1", "true", "yes", "on", "да")
